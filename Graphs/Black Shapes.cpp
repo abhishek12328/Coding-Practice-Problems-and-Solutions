@@ -18,14 +18,6 @@ void dfs(vector<string>& a,vector<vector<int>> & visited,int i,int j){
 }
 
 int Solution::black(vector<string> &a) {
-    // vector<vector<int>> adj(a.size(),a[0].size());
-    
-    // for(int i=0;i<a.size();i++){
-    //     for(int j=0;j<a[0].size();j++){
-    //         if(a[i][j] == )
-    //     }
-        
-    // }
     int count=0;
     vector<vector<int>> visited(a.size(),vector<int>(a[0].size(),false));
     for(int i=0;i<a.size();i++){
