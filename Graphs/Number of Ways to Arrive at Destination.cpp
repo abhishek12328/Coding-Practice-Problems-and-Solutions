@@ -4,53 +4,57 @@ You are given an integer n and a 2D integer array roads where roads[i] = [ui, vi
 
 Return the number of ways you can arrive at your destination in the shortest amount of time. Since the answer may be large, return it modulo 109 + 7. */
 
- long long MOD=1e9+ 7;
-    int countPaths(int n, vector<vector<int>>& roads) {
-      vector<long long> dis(n,1e15);
-        
-        vector<long long> ways(n,1);
-        dis[0]=0;
-        ways[0]=1;
-       
-        vector<vector<pair<long long,long long>>> adj(n);
-       
-        for(auto x: roads){
-            adj[x[0]].push_back({x[1],x[2]});
-            adj[x[1]].push_back({x[0],x[2]}); 
-        }
-        
-         priority_queue<pair<long long,long long>,vector<pair<long long,long long>>,greater<pair<long long,long long>>> q;
- 
-	dis[0]=0;
-	
-	q.push({0,0});
-	
-     long long disprev,prev,currnum,currw;
- 
-	while(!q.empty()){
-	    disprev=q.top().first;
-	    prev=q.top().second;
-	    
-	    q.pop();
-        if (dis[prev]<disprev) continue;
-	    for(auto x: adj[prev]){
-	          currnum=x.first;
-              currw=x.second;
-           
-	        if(dis[prev] + currw < dis[currnum]){
-	            dis[currnum]=dis[prev] + currw;
-	            q.push({dis[currnum],currnum});   
-                ways[currnum]=ways[prev]%MOD;
-	        }
-            else if(dis[prev] + currw == dis[currnum]){
-                ways[currnum]+=ways[prev];
-                ways[currnum]%=MOD;
-            }
-	    }
-	}
-	
-      
-        
-        return ways[n-1];
-
+class Solution {
+public:
+    int minDistance(vector<long long> dist, bool sptSet[],int V){
+        long long min = 1000000000000000, min_index;
+        for (int v = 0; v < V; v++)
+            if (sptSet[v] == false && dist[v] <= min)
+                min = dist[v], min_index = v;
+        return min_index;
     }
+ 
+    
+    int dijkstra(vector<vector<int>> graph, int src){
+        int V = graph.size();
+        vector<long long> dist(V); 
+        bool sptSet[V]; 
+        vector<long long> ans(V,0);
+            ans[0] = 1;
+        for (int i = 0; i < V; i++){
+            dist[i] = 1000000000000000;
+        sptSet[i] = false;
+        }
+
+        dist[src] = 0;
+
+        for (int count = 0; count <V-1; count++) {
+            int u = minDistance(dist, sptSet,V);
+            sptSet[u] = true;
+            cout << u << " " << dist[u] << "  ";
+            for (int v = 0; v < V; v++){
+                if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] <= dist[v]){
+                    
+                    if(dist[u] + graph[u][v] == dist[v])
+                    ans[v] = (ans[v] + ans[u])%(1000000007);
+                    else if(dist[u] + graph[u][v] < dist[v])
+                    ans[v] = ans[u];
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+        cout << endl;
+        return ans[V-1];
+    }
+    
+    
+    int countPaths(int n, vector<vector<int>>& roads) {
+        vector<vector<int>> v(n,vector<int>(n,0));
+        int k = roads.size();
+        for(int i=0;i<k;i++){
+            v[roads[i][0]][roads[i][1]] = roads[i][2];
+            v[roads[i][1]][roads[i][0]] = roads[i][2];
+        }
+        return dijkstra(v,0);
+    }
+};
