@@ -36,3 +36,19 @@ int Solution::pow(int x, int n, int d) {
     // Do not print the output, instead return values as specified
     // Still have a doubt. Checkout www.interviewbit.com/pages/sample_codes/ for more details
 }
+//better sol
+class Solution {
+public:
+        double pow(double x,long n){
+            if(n==0) return 1.0;
+            if(n==1) return x;
+            if(n<0) return pow(1/x,-n);
+            double result = pow(x*x,n/2);
+            if(n%2) result*=x;
+            return result;
+        }
+    double myPow(double x, int n) {
+        long k = n;
+        return pow(x,n);
+    }
+};
