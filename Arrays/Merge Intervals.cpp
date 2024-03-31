@@ -23,3 +23,32 @@ public:
         
     }
 };
+
+//java
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if(intervals.length == 1 )
+        return intervals; 
+        int n = intervals.length;
+        ArrayList<int[]> ans = new ArrayList<>();
+
+        Arrays.sort(intervals, new Comparator<int[]>(){
+            public int compare(int[] a, int[] b){
+                return a[0]-b[0];
+            }
+        });
+        int i=0,j=1;
+        while(i<n){
+            int max = intervals[i][1];
+            while(j<n && max>=intervals[j][0]){
+                if(max < intervals[j][1]) max = intervals[j][1];
+                j++;
+            }
+            ans.add(new int[]{intervals[i][0],max});
+            i=j;
+            j++;
+        }
+        return ans.toArray(new int[ans.size()][]);
+    }
+}
